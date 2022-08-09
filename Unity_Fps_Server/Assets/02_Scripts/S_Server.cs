@@ -17,7 +17,7 @@ public class S_Server : Singleton<S_Server>
 
     // 서버의 ip,port
     public const string ip = "127.0.0.1";
-    public const int port = 1007;
+    public const int port = 1008;
 
     // 클라이언트 객체
     static TcpClient client = null;
@@ -57,20 +57,27 @@ public class S_Server : Singleton<S_Server>
             {
                 // ReadLine() 을 통해 데이터를 문자열로 가져옴
                 string R_Data = r.ReadLine();
-                // 로그 출력
-                Debug.Log(R_Data);
 
-                // 받아온 데이터의 앞에서 3자리까지가 Pos 일시 좌표데이터인것을 판별
+                // 받아온 데이터의 앞에서 7자리까지가 Postion 일시 좌표데이터인것을 판별
                 if (R_Data.Substring(0, 7) == "Postion")
                 {
                     // tmp 에 R_Data 값을 넣음
                     string tmp = R_Data.Replace("Postion", "");
                     // pos 배열에 / 를 간격으로 저장
                     string[] pos = tmp.Split('/');
-                    Debug.Log(pos[0] + " " + pos[1] + " " + pos[2]);
-
-                    // C_Move enemy_move() 를 호출해 받아온 데이터를 Vector 값으로 변환하여 전송 [0] = X [1] = Y [2] = Z
+                    // S_Move enemy_move() 를 호출해 받아온 데이터를 Vector 값으로 변환하여 전송 [0] = X [1] = Y [2] = Z
                     S_Move.Instance.enemy_move(new Vector3(float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2])));
+                }
+
+                // 받아온 데이터의 앞에서 8자리까지가 Rotation 일시 좌표데이터인것을 판별
+                else if(R_Data.Substring(0, 8) == "Rotation")
+                {
+                    // tmp 에 R_Data 값을 넣음
+                    string tmp = R_Data.Replace("Rotation", "");
+                    // rot 배열에 / 를 간격으로 저장
+                    string[] rot = tmp.Split('/');
+                    // S_Move enemy_rot() 를 호출해 받아온 데이터를 Vecort 값으로 변환하여 전송 [0] = X [1] = Y [2] = Z
+                    S_Move.Instance.enemy_rot(new Vector3(float.Parse(rot[0]), float.Parse(rot[1]), float.Parse(rot[2])));
                 }
             }
         }
